@@ -11,9 +11,14 @@ export class CardController {
     return this.cardService.getAccountMoves(card);
   }
 
-  @Post()
+  @Post('out')
   takeOutCash(@Body() card: cardDto){
     this.cardService.takeOutCash(card);
+  }
+
+  @Post('in')
+  takeInCash(@Body() card: cardDto){
+    this.cardService.takeInCash(card);
   }
 
 }

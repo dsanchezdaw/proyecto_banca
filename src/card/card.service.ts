@@ -27,18 +27,24 @@ export class CardService {
   async takeOutCash(card: cardDto) {
     const cardExist = await this.cardRepository.findOne({where: {id: card.cardNumber}, relations: ['account']});
 
-    if(cardExist && cardExist.isActive){
-      if(cardExist.type == cardType.CREDIT){
+    if(cardExist.type == cardType.CREDIT){
+      return await this.moveService.takeMoney(card.amount, cardExist.account.iban, !!cardExist);
+    } else if(cardExist.type == cardType.DEBIT){
+      if(await this.moveService.getTotalAmount(cardExist.account.iban) > card.amount){
+        return new HttpException("To much money to take", HttpStatus.NOT_ACCEPTABLE)
+      }else{
         return await this.moveService.takeMoney(card.amount, cardExist.account.iban, !!cardExist);
-      } else if(cardExist.type == cardType.DEBIT){
-        if(await this.moveService.getTotalAmount(cardExist.account.iban) > card.amount){
-          return new HttpException("To much money to take", HttpStatus.NOT_ACCEPTABLE)
-        }else{
-          return await this.moveService.takeMoney(card.amount, cardExist.account.iban, !!cardExist);
-        }
       }
+    }
+
+  }
+  async takeInCash(card: cardDto) {
+    const cardExist = await this.cardRepository.findOne({where: {id: card.cardNumber}, relations: ['account']});
+
+    if(cardExist){
+        return await this.moveService.depositMoney(card.amount, cardExist.account.iban);
     }else{
-      return new HttpException('Card is not actived', HttpStatus.UNAUTHORIZED);
+      return new HttpException('Card does not exist', HttpStatus.NOT_FOUND);
     }
 
   }

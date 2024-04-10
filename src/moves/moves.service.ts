@@ -15,12 +15,12 @@ export class MovesService {
   async getMovesByIban(iban: string) {
     return await this.moveRepository.find({where: {account: {iban: iban}}})
   }
-
+  
   async getTotalAmount(accountIban: string){
     const totalAmount = await this.moveRepository.createQueryBuilder("move").where('accountIban =:accountIban',{accountIban}).select('SUM(amount)', 'totalAmount').getRawOne();
     return totalAmount.totalAmount;
   }
-
+  
   async takeMoney(amount: number, iban: string, cardExist: boolean) {
     let newAmount = amount - (amount*2);
     if(cardExist){
@@ -37,16 +37,25 @@ export class MovesService {
         account: {iban:iban}
       })
       await this.moveRepository.save(createAmount);
-
+      
       const createCommission = this.moveRepository.create({
         amount:newAmount*1.01,
         concept: 'commission',
         account: {iban:iban}
       })
       await this.moveRepository.save(createCommission);
-
+      
       return createAmount;
     }
     
   }
+
+  async depositMoney(amount: number, iban: string) {
+    const createMove = this.moveRepository.create({
+      amount: amount,
+      concept: 'deposit',
+      account: {iban:iban}
+    })
+    return await this.moveRepository.save(createMove);
+    }
 }
