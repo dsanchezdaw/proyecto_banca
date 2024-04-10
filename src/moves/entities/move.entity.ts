@@ -7,6 +7,8 @@ export class Move{
     id: number
     @Column()
     amount:number
+    @Column()
+    concept: string
 
     @ManyToOne(()=>Account, account => account.moves)
     account: Account
