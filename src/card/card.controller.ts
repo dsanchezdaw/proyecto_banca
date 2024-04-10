@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CardService } from './card.service';
-import { cardDto, simpleCardDto } from './dto/card.dto';
+import { cardDto, simpleCardDto, transferDto } from './dto/card.dto';
 
 @Controller('card')
 export class CardController {
@@ -20,5 +20,11 @@ export class CardController {
   takeInCash(@Body() card: cardDto){
     this.cardService.takeInCash(card);
   }
+
+  @Post('transfer')
+  createTransfer(@Body() card: transferDto){
+    this.cardService.createTransfer(card);
+  }
+
 
 }

@@ -13,3 +13,13 @@ export class simpleCardDto{
     @IsNotEmpty()
     iban: string
 }
+export class transferDto{
+    @IsNotEmpty()
+    cardNumber: number
+    @IsNotEmpty()
+    amount: number
+    @IsNotEmpty()
+    iban: string
+    @IsNotEmpty()
+    externalIban: string
+}
