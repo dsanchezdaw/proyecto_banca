@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AccountModule } from './account/account.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CardModule } from './card/card.module';
 import { MovesModule } from './moves/moves.module';
+import { MovesService } from './moves/moves.service';
+import { MovesController } from './moves/moves.controller';
+import { CardController } from './card/card.controller';
+import { CardService } from './card/card.service';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -17,7 +19,7 @@ import { MovesModule } from './moves/moves.module';
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true,
   }), AccountModule, CardModule, MovesModule],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

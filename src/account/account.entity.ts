@@ -5,9 +5,7 @@ import { Column, Entity, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 @Entity('account')
 export class Account{
     @PrimaryColumn()
-    iban: number
-    @Column()
-    amount:number
+    iban: string
     @Column({unique: true})
     dni:string
 
