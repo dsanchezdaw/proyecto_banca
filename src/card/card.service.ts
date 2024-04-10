@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { cardDto, simpleCardDto, transferDto } from './dto/card.dto';
+import { activateCardDto, cardDto, pinCardDto, simpleCardDto, transferDto } from './dto/card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Card, cardType } from './card.entity';
 import { Repository } from 'typeorm';
 import { MovesService } from 'src/moves/moves.service';
 import * as IBAN from 'iban';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class CardService {
   
@@ -49,17 +49,27 @@ export class CardService {
     }
     
   }
-
+  
   async createTransfer(card: transferDto) {
     const ibanIsValid = IBAN.isValid(card.iban);
     const iban2IsValid = IBAN.isValid(card.externalIban);
     const cardExist = await this.cardRepository.findOne({where:{id:card.cardNumber}, relations:{account: true}});
-
+    
     if(ibanIsValid && iban2IsValid){
       this.moveService.createTransfer(card.amount, cardExist.account.iban, card.externalIban)
     }else{
       return new HttpException('this iban is not valid', HttpStatus.BAD_REQUEST)
     }
   }
+  activateCard(card: activateCardDto) {
+    return this.cardRepository.update(card.cardNumber,{isActive:true});
+  }
+  
+  async setPinCard(card: pinCardDto) {
+    const salts = 5;
+    const pin = await bcrypt.hash(card.pin.toString(), salts);
 
+    return this.cardRepository.update(card.cardNumber,{pin:pin});
+  }
+  
 }

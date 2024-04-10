@@ -6,7 +6,7 @@ export class Card{
     @PrimaryGeneratedColumn()
     id: number
     @Column()
-    pin:number
+    pin:string
     @Column({unique: true})
     type: cardType
     @Column({default: false})

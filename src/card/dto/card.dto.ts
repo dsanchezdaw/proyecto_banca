@@ -23,3 +23,14 @@ export class transferDto{
     @IsNotEmpty()
     externalIban: string
 }
+
+export class activateCardDto{
+    @IsNotEmpty()
+    cardNumber: number
+}
+export class pinCardDto{
+    @IsNotEmpty()
+    cardNumber: number
+    @IsNotEmpty()
+    pin: number
+}

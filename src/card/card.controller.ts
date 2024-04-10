@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CardService } from './card.service';
-import { cardDto, simpleCardDto, transferDto } from './dto/card.dto';
+import { activateCardDto, cardDto, pinCardDto, simpleCardDto, transferDto } from './dto/card.dto';
 
 @Controller('card')
 export class CardController {
@@ -24,6 +24,14 @@ export class CardController {
   @Post('transfer')
   createTransfer(@Body() card: transferDto){
     this.cardService.createTransfer(card);
+  }
+  @Patch('activate')
+  activateCard(@Body() card: activateCardDto){
+    this.cardService.activateCard(card);
+  }
+  @Patch('pin')
+  setPinCard(@Body() card: pinCardDto){
+    this.cardService.setPinCard(card);
   }
 
 
